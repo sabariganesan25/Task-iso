@@ -1,0 +1,2 @@
+import { Router } from 'express'; import * as c from '../controllers/taskController.js'; import { validate, taskSchema } from '../validators/index.js';
+const router = Router(); router.route('/').get(c.listTasks).post(validate(taskSchema), c.createTask); router.patch('/:id/complete', c.completeTask); router.route('/:id').get(c.getTask).put(validate(taskSchema), c.updateTask).delete(c.deleteTask); export default router;

@@ -1,0 +1,29 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: projectflow
+      POSTGRES_PASSWORD: projectflow
+      POSTGRES_DB: projectflow
+    volumes: [postgres_data:/var/lib/postgresql/data]
+    healthcheck:
+      test: [CMD-SHELL, pg_isready -U projectflow]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+  server:
+    build: ./server
+    environment:
+      DATABASE_URL: postgresql://projectflow:projectflow@postgres:5432/projectflow?schema=public
+      JWT_SECRET: change-this-in-production-to-a-long-random-secret
+      JWT_EXPIRES_IN: 7d
+      CLIENT_URL: http://localhost:5173
+      PORT: 4000
+      NODE_ENV: production
+    depends_on: { postgres: { condition: service_healthy } }
+    ports: ["4000:4000"]
+  client:
+    build: ./client
+    depends_on: [server]
+    ports: ["5173:80"]
+volumes: { postgres_data: {} }

@@ -1,0 +1,3 @@
+import { createContext, useContext, useState } from 'react';
+const Auth = createContext(); export const useAuth = () => useContext(Auth);
+export function AuthProvider({ children }) { const [user, setUser] = useState(() => JSON.parse(localStorage.getItem('projectflow_user') || 'null')); const save = (result) => { localStorage.setItem('projectflow_token', result.token); localStorage.setItem('projectflow_user', JSON.stringify(result.user)); setUser(result.user); }; const logout = () => { localStorage.removeItem('projectflow_token'); localStorage.removeItem('projectflow_user'); setUser(null); }; return <Auth.Provider value={{ user, save, logout }}>{children}</Auth.Provider>; }

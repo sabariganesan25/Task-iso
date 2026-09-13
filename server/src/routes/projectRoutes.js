@@ -1,0 +1,2 @@
+import { Router } from 'express'; import * as c from '../controllers/projectController.js'; import { validate, projectSchema } from '../validators/index.js';
+const router = Router(); router.route('/').get(c.listProjects).post(validate(projectSchema), c.createProject); router.route('/:id').get(c.getProject).put(validate(projectSchema), c.updateProject).delete(c.deleteProject); export default router;

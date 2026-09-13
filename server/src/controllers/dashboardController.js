@@ -1,0 +1,4 @@
+import prisma from '../utils/prisma.js';
+import { asyncHandler } from '../utils/asyncHandler.js';
+export const dashboard = asyncHandler(async (req, res) => { const userId = req.userId; const [totalProjects, totalTasks, completedTasks, pendingTasks, inProgressProjects] = await Promise.all([prisma.project.count({ where: { userId } }), prisma.task.count({ where: { userId } }), prisma.task.count({ where: { userId, status: 'COMPLETED' } }), prisma.task.count({ where: { userId, status: { not: 'COMPLETED' } } }), prisma.project.count({ where: { userId, status: 'IN_PROGRESS' } })]); res.json({ totalProjects, totalTasks, completedTasks, pendingTasks, inProgressProjects }); });
+export const auditLogs = asyncHandler(async (req, res) => res.json(await prisma.auditLog.findMany({ where: { userId: req.userId }, orderBy: { createdAt: 'desc' }, take: 100 })));

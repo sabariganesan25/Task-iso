@@ -1,0 +1,2 @@
+import { registerSchema, projectSchema } from '../src/validators/index.js';
+describe('validation', () => { test('rejects a weak registration password', () => expect(registerSchema.safeParse({ fullName: 'A', email: 'a@b.com', password: 'short' }).success).toBe(false)); test('accepts a project', () => expect(projectSchema.safeParse({ name: 'Launch', status: 'IN_PROGRESS' }).success).toBe(true)); });
